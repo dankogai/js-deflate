@@ -1,5 +1,5 @@
 /*
- * $Id: rawdeflate.js,v 0.2 2009/03/01 18:32:24 dankogai Exp dankogai $
+ * $Id: rawdeflate.js,v 0.3 2009/03/01 19:05:05 dankogai Exp dankogai $
  *
  * Original:
  *   http://www.onicos.com/staff/iz/amuse/javascript/expert/deflate.txt
@@ -130,27 +130,6 @@ var zip_static_len;
 var zip_deflate_data;
 var zip_deflate_pos;
 
-/* constant tables */
-var zip_extra_lbits = new Array(
-    0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0);
-var zip_extra_dbits = new Array(
-    0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13);
-var zip_extra_blbits = new Array(
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,7);
-var zip_bl_order = new Array(
-    16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15);
-var zip_configuration_table = new Array(
-	new zip_DeflateConfiguration(0,    0,   0,    0),
-	new zip_DeflateConfiguration(4,    4,   8,    4),
-	new zip_DeflateConfiguration(4,    5,  16,    8),
-	new zip_DeflateConfiguration(4,    6,  32,   32),
-	new zip_DeflateConfiguration(4,    4,  16,   16),
-	new zip_DeflateConfiguration(8,   16,  32,   32),
-	new zip_DeflateConfiguration(8,   16, 128,  128),
-	new zip_DeflateConfiguration(8,   32, 128,  256),
-	new zip_DeflateConfiguration(32, 128, 258, 1024),
-	new zip_DeflateConfiguration(32, 258, 258, 4096));
-
 /* objects (deflate) */
 
 var zip_DeflateCT = function() {
@@ -186,6 +165,28 @@ var zip_DeflateBuffer = function() {
     this.ptr = new Array(zip_OUTBUFSIZ);
     this.off = 0;
 }
+
+/* constant tables */
+var zip_extra_lbits = new Array(
+    0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0);
+var zip_extra_dbits = new Array(
+    0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13);
+var zip_extra_blbits = new Array(
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,7);
+var zip_bl_order = new Array(
+    16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15);
+var zip_configuration_table = new Array(
+	new zip_DeflateConfiguration(0,    0,   0,    0),
+	new zip_DeflateConfiguration(4,    4,   8,    4),
+	new zip_DeflateConfiguration(4,    5,  16,    8),
+	new zip_DeflateConfiguration(4,    6,  32,   32),
+	new zip_DeflateConfiguration(4,    4,  16,   16),
+	new zip_DeflateConfiguration(8,   16,  32,   32),
+	new zip_DeflateConfiguration(8,   16, 128,  128),
+	new zip_DeflateConfiguration(8,   32, 128,  256),
+	new zip_DeflateConfiguration(32, 128, 258, 1024),
+	new zip_DeflateConfiguration(32, 258, 258, 4096));
+
 
 /* routines (deflate) */
 
