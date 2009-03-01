@@ -153,12 +153,12 @@ var zip_configuration_table = new Array(
 
 /* objects (deflate) */
 
-function zip_DeflateCT() {
+var zip_DeflateCT = function() {
     this.fc = 0; // frequency count or bit string
     this.dl = 0; // father node in Huffman tree or length of bit string
 }
 
-function zip_DeflateTreeDesc() {
+var zip_DeflateTreeDesc = function() {
     this.dyn_tree = null;	// the dynamic tree
     this.static_tree = null;	// corresponding static tree or NULL
     this.extra_bits = null;	// extra bits for each code or NULL
@@ -173,14 +173,14 @@ function zip_DeflateTreeDesc() {
  * exclude worst case performance for pathological files. Better values may be
  * found for specific files.
  */
-function zip_DeflateConfiguration(a, b, c, d) {
+var zip_DeflateConfiguration = function(a, b, c, d) {
     this.good_length = a; // reduce lazy search above this match length
     this.max_lazy = b;    // do not perform lazy search above this match length
     this.nice_length = c; // quit search above this match length
     this.max_chain = d;
 }
 
-function zip_DeflateBuffer() {
+var zip_DeflateBuffer = function() {
     this.next = null;
     this.len = 0;
     this.ptr = new Array(zip_OUTBUFSIZ);
@@ -189,7 +189,7 @@ function zip_DeflateBuffer() {
 
 /* routines (deflate) */
 
-function zip_deflate_start(level) {
+var zip_deflate_start = function(level) {
     var i;
 
     if(!level)
@@ -239,7 +239,7 @@ function zip_deflate_start(level) {
     zip_flag_buf = new Array(parseInt(zip_LIT_BUFSIZE / 8));
 }
 
-function zip_deflate_end() {
+var zip_deflate_end = function() {
     zip_free_queue = zip_qhead = zip_qtail = null;
     zip_outbuf = null;
     zip_window = null;
@@ -264,12 +264,12 @@ function zip_deflate_end() {
     zip_flag_buf = null;
 }
 
-function zip_reuse_queue(p) {
+var zip_reuse_queue = function(p) {
     p.next = zip_free_queue;
     zip_free_queue = p;
 }
 
-function zip_new_queue() {
+var zip_new_queue = function() {
     var p;
 
     if(zip_free_queue != null)
@@ -285,11 +285,11 @@ function zip_new_queue() {
     return p;
 }
 
-function zip_head1(i) {
+var zip_head1 = function(i) {
     return zip_prev[zip_WSIZE + i];
 }
 
-function zip_head2(i, val) {
+var zip_head2 = function(i, val) {
     return zip_prev[zip_WSIZE + i] = val;
 }
 
@@ -298,14 +298,14 @@ function zip_head2(i, val) {
  * suffix table instead of its output buffer, so it does not use put_ubyte
  * (to be cleaned up).
  */
-function zip_put_byte(c) {
+var zip_put_byte = function(c) {
     zip_outbuf[zip_outoff + zip_outcnt++] = c;
     if(zip_outoff + zip_outcnt == zip_OUTBUFSIZ)
 	zip_qoutbuf();
 }
 
 /* Output a 16 bit value, lsb first */
-function zip_put_short(w) {
+var zip_put_short = function(w) {
     w &= 0xffff;
     if(zip_outoff + zip_outcnt < zip_OUTBUFSIZ - 2) {
 	zip_outbuf[zip_outoff + zip_outcnt++] = (w & 0xff);
@@ -324,7 +324,7 @@ function zip_put_short(w) {
  *    input characters and the first MIN_MATCH bytes of s are valid
  *    (except for the last MIN_MATCH-1 bytes of the input file).
  */
-function zip_INSERT_STRING() {
+var zip_INSERT_STRING = function() {
     zip_ins_h = ((zip_ins_h << zip_H_SHIFT)
 		 ^ (zip_window[zip_strstart + zip_MIN_MATCH - 1] & 0xff))
 	& zip_HASH_MASK;
@@ -334,7 +334,7 @@ function zip_INSERT_STRING() {
 }
 
 /* Send a code of the given tree. c and tree must not have side effects */
-function zip_SEND_CODE(c, tree) {
+var zip_SEND_CODE = function(c, tree) {
     zip_send_bits(tree[c].fc, tree[c].dl);
 }
 
@@ -342,7 +342,7 @@ function zip_SEND_CODE(c, tree) {
  * must not have side effects. dist_code[256] and dist_code[257] are never
  * used.
  */
-function zip_D_CODE(dist) {
+var zip_D_CODE = function(dist) {
     return (dist < 256 ? zip_dist_code[dist]
 	    : zip_dist_code[256 + (dist>>7)]) & 0xff;
 }
@@ -351,7 +351,7 @@ function zip_D_CODE(dist) {
  * Compares to subtrees, using the tree depth as tie breaker when
  * the subtrees have equal frequency. This minimizes the worst case length.
  */
-function zip_SMALLER(tree, n, m) {
+var zip_SMALLER = function(tree, n, m) {
     return tree[n].fc < tree[m].fc ||
       (tree[n].fc == tree[m].fc && zip_depth[n] <= zip_depth[m]);
 }
@@ -359,7 +359,7 @@ function zip_SMALLER(tree, n, m) {
 /* ==========================================================================
  * read string data
  */
-function zip_read_buff(buff, offset, n) {
+var zip_read_buff = function(buff, offset, n) {
     var i;
     for(i = 0; i < n && zip_deflate_pos < zip_deflate_data.length; i++)
 	buff[offset + i] =
@@ -370,7 +370,7 @@ function zip_read_buff(buff, offset, n) {
 /* ==========================================================================
  * Initialize the "longest match" routines for a new file
  */
-function zip_lm_init() {
+var zip_lm_init = function() {
     var j;
 
     /* Initialize the hash table. */
@@ -421,7 +421,7 @@ function zip_lm_init() {
  * IN assertions: cur_match is the head of the hash chain for the current
  *   string (strstart) and its distance is <= MAX_DIST, and prev_length >= 1
  */
-function zip_longest_match(cur_match) {
+var zip_longest_match = function(cur_match) {
     var chain_length = zip_max_chain_length; // max hash chain length
     var scanp = zip_strstart; // current string
     var matchp;		// matched string
@@ -509,7 +509,7 @@ function zip_longest_match(cur_match) {
  *    file reads are performed for at least two bytes (required for the
  *    translate_eol option).
  */
-function zip_fill_window() {
+var zip_fill_window = function() {
     var n, m;
 
     // Amount of free space at the end of the window.
@@ -566,7 +566,7 @@ function zip_fill_window() {
  * new strings in the dictionary only for unmatched strings or for short
  * matches. It is used only for the fast compression options.
  */
-function zip_deflate_fast() {
+var zip_deflate_fast = function() {
     while(zip_lookahead != 0 && zip_qhead == null) {
 	var flush; // set if current block must be flushed
 
@@ -644,7 +644,7 @@ function zip_deflate_fast() {
     }
 }
 
-function zip_deflate_better() {
+var zip_deflate_better = function() {
     /* Process the input block. */
     while(zip_lookahead != 0 && zip_qhead == null) {
 	/* Insert the string window[strstart .. strstart+2] in the
@@ -741,7 +741,7 @@ function zip_deflate_better() {
     }
 }
 
-function zip_init_deflate() {
+var zip_init_deflate = function() {
     if(zip_eofile)
 	return;
     zip_bi_buf = 0;
@@ -772,7 +772,7 @@ function zip_init_deflate() {
  * evaluation for matches: a match is finally adopted only if there is
  * no better match at the next window position.
  */
-function zip_deflate_internal(buff, off, buff_size) {
+var zip_deflate_internal = function(buff, off, buff_size) {
     var n;
 
     if(!zip_initflag)
@@ -804,7 +804,7 @@ function zip_deflate_internal(buff, off, buff_size) {
     return n + zip_qcopy(buff, n + off, buff_size - n);
 }
 
-function zip_qcopy(buff, off, buff_size) {
+var zip_qcopy = function(buff, off, buff_size) {
     var n, i, j;
 
     n = 0;
@@ -851,7 +851,7 @@ function zip_qcopy(buff, off, buff_size) {
  * location of the internal file attribute (ascii/binary) and method
  * (DEFLATE/STORE).
  */
-function zip_ct_init() {
+var zip_ct_init = function() {
     var n;	// iterates over tree elements
     var bits;	// bit counter
     var length;	// length value
@@ -943,7 +943,7 @@ function zip_ct_init() {
 /* ==========================================================================
  * Initialize a new block.
  */
-function zip_init_block() {
+var zip_init_block = function() {
     var n; // iterates over tree elements
 
     // Initialize the trees.
@@ -964,7 +964,7 @@ function zip_init_block() {
  * when the heap property is re-established (each father smaller than its
  * two sons).
  */
-function zip_pqdownheap(
+var zip_pqdownheap = function(
     tree,	// the tree to restore
     k) {	// node to move down
     var v = zip_heap[k];
@@ -1000,7 +1000,7 @@ function zip_pqdownheap(
  *     The length opt_len is updated; static_len is also updated if stree is
  *     not null.
  */
-function zip_gen_bitlen(desc) { // the tree descriptor
+var zip_gen_bitlen = function(desc) { // the tree descriptor
     var tree		= desc.dyn_tree;
     var extra		= desc.extra_bits;
     var base		= desc.extra_base;
@@ -1091,7 +1091,7 @@ function zip_gen_bitlen(desc) { // the tree descriptor
    * OUT assertion: the field code is set for all tree elements of non
    *     zero code length.
    */
-function zip_gen_codes(tree,	// the tree to decorate
+var zip_gen_codes = function(tree,	// the tree to decorate
 		   max_code) {	// largest code with non zero frequency
     var next_code = new Array(zip_MAX_BITS+1); // next code value for each bit length
     var code = 0;		// running code value
@@ -1133,7 +1133,7 @@ function zip_gen_codes(tree,	// the tree to decorate
  *     and corresponding code. The length opt_len is updated; static_len is
  *     also updated if stree is not null. The field max_code is set.
  */
-function zip_build_tree(desc) { // the tree descriptor
+var zip_build_tree = function(desc) { // the tree descriptor
     var tree	= desc.dyn_tree;
     var stree	= desc.static_tree;
     var elems	= desc.elems;
@@ -1224,7 +1224,7 @@ function zip_build_tree(desc) { // the tree descriptor
  * counts. (The contribution of the bit length codes will be added later
  * during the construction of bl_tree.)
  */
-function zip_scan_tree(tree,// the tree to be scanned
+var zip_scan_tree = function(tree,// the tree to be scanned
 		       max_code) {  // and its largest code of non zero frequency
     var n;			// iterates over all tree elements
     var prevlen = -1;		// last emitted length
@@ -1273,7 +1273,7 @@ function zip_scan_tree(tree,// the tree to be scanned
    * Send a literal or distance tree in compressed form, using the codes in
    * bl_tree.
    */
-function zip_send_tree(tree, // the tree to be scanned
+var zip_send_tree = function(tree, // the tree to be scanned
 		   max_code) { // and its largest code of non zero frequency
     var n;			// iterates over all tree elements
     var prevlen = -1;		// last emitted length
@@ -1330,7 +1330,7 @@ function zip_send_tree(tree, // the tree to be scanned
  * Construct the Huffman tree for the bit lengths and return the index in
  * bl_order of the last bit length code to send.
  */
-function zip_build_bl_tree() {
+var zip_build_bl_tree = function() {
     var max_blindex;  // index of last bit length code of non zero freq
 
     // Determine the bit length frequencies for literal and distance trees
@@ -1363,7 +1363,7 @@ function zip_build_bl_tree() {
  * lengths of the bit length codes, the literal tree and the distance tree.
  * IN assertion: lcodes >= 257, dcodes >= 1, blcodes >= 4.
  */
-function zip_send_all_trees(lcodes, dcodes, blcodes) { // number of codes for each tree
+var zip_send_all_trees = function(lcodes, dcodes, blcodes) { // number of codes for each tree
     var rank; // index in bl_order
 
 //    Assert (lcodes >= 257 && dcodes >= 1 && blcodes >= 4, "not enough codes");
@@ -1389,7 +1389,7 @@ function zip_send_all_trees(lcodes, dcodes, blcodes) { // number of codes for ea
  * Determine the best encoding for the current block: dynamic trees, static
  * trees or store, and output the encoded block to the zip file.
  */
-function zip_flush_block(eof) { // true if this is the last block for a file
+var zip_flush_block = function(eof) { // true if this is the last block for a file
     var opt_lenb, static_lenb; // opt_len and static_len in bytes
     var max_blindex;	// index of last bit length code of non zero freq
     var stored_len;	// length of input block
@@ -1470,7 +1470,7 @@ function zip_flush_block(eof) { // true if this is the last block for a file
  * Save the match info and tally the frequency counts. Return true if
  * the current block must be flushed.
  */
-function zip_ct_tally(
+var zip_ct_tally = function(
 	dist, // distance of matched string
 	lc) { // match length-MIN_MATCH or unmatched char (if dist==0)
     zip_l_buf[zip_last_lit++] = lc;
@@ -1527,7 +1527,7 @@ function zip_ct_tally(
   /* ==========================================================================
    * Send the block data compressed using the given Huffman trees
    */
-function zip_compress_block(
+var zip_compress_block = function(
 	ltree,	// literal tree
 	dtree) {	// distance tree
     var dist;		// distance of matched string
@@ -1578,7 +1578,7 @@ function zip_compress_block(
  * IN assertion: length <= 16 and value fits in length bits.
  */
 var zip_Buf_size = 16; // bit size of bi_buf
-function zip_send_bits(
+var zip_send_bits = function(
 	value,	// value to send
 	length) {	// number of bits
     /* If not enough room in bi_buf, use (valid) bits from bi_buf and
@@ -1601,7 +1601,7 @@ function zip_send_bits(
  * method would use a table)
  * IN assertion: 1 <= len <= 15
  */
-function zip_bi_reverse(
+var zip_bi_reverse = function(
 	code,	// the value to invert
 	len) {	// its bit length
     var res = 0;
@@ -1616,7 +1616,7 @@ function zip_bi_reverse(
 /* ==========================================================================
  * Write out any remaining bits in an incomplete byte.
  */
-function zip_bi_windup() {
+var zip_bi_windup = function() {
     if(zip_bi_valid > 8) {
 	zip_put_short(zip_bi_buf);
     } else if(zip_bi_valid > 0) {
@@ -1626,7 +1626,7 @@ function zip_bi_windup() {
     zip_bi_valid = 0;
 }
 
-function zip_qoutbuf() {
+var zip_qoutbuf = function() {
     if(zip_outcnt != 0) {
 	var q, i;
 	q = zip_new_queue();
@@ -1642,7 +1642,7 @@ function zip_qoutbuf() {
     }
 }
 
-function zip_deflate(str, level) {
+var zip_deflate = function(str, level) {
     var i, j;
 
     zip_deflate_data = str;
