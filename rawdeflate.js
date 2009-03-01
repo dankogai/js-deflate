@@ -1643,7 +1643,6 @@ function zip_qoutbuf() {
 }
 
 function zip_deflate(str, level) {
-    var out, buff;
     var i, j;
 
     zip_deflate_data = str;
@@ -1652,14 +1651,17 @@ function zip_deflate(str, level) {
 	level = zip_DEFAULT_LEVEL;
     zip_deflate_start(level);
 
-    buff = new Array(1024);
-    out = "";
+    var buff = new Array(1024);
+    var aout = [];
     while((i = zip_deflate_internal(buff, 0, buff.length)) > 0) {
-	for(j = 0; j < i; j++)
-	    out += String.fromCharCode(buff[j]);
+	var cbuf = new Array(i);
+	for(j = 0; j < i; j++){
+	    cbuf[j] = String.fromCharCode(buff[j]);
+	}
+	aout[aout.length] = cbuf.join("");
     }
     zip_deflate_data = null; // G.C.
-    return out;
+    return aout.join("");
 }
 
 if (! window.RawDeflate) RawDeflate = {};
