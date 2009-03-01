@@ -1,5 +1,5 @@
 /*
- * $Id: rawdeflate.js,v 0.1 2009/03/01 17:18:50 dankogai Exp dankogai $
+ * $Id: rawdeflate.js,v 0.2 2009/03/01 18:32:24 dankogai Exp dankogai $
  *
  * Original:
  *   http://www.onicos.com/staff/iz/amuse/javascript/expert/deflate.txt
