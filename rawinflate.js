@@ -736,13 +736,18 @@ function zip_inflate(str) {
     zip_inflate_pos = 0;
 
     buff = new Array(1024);
-    out = "";
+    // out = "";
+    var aout = [];
     while((i = zip_inflate_internal(buff, 0, buff.length)) > 0) {
-	for(j = 0; j < i; j++)
-	    out += String.fromCharCode(buff[j]);
+	var cbuf = new Array(i);
+	for(j = 0; j < i; j++){
+	    cbuf[j] = String.fromCharCode(buff[j]);
+	}
+	aout[aout.length] = cbuf.join("");
     }
     zip_inflate_data = null; // G.C.
-    return out;
+    // return out;
+    return aout.join("");
 }
 
 if (! window.RawDeflate) RawDeflate = {};
