@@ -753,6 +753,7 @@ var zip_init_deflate = function() {
     zip_qhead = null;
     zip_outcnt = 0;
     zip_outoff = 0;
+    zip_match_available = 0;
 
     if(zip_compr_level <= 3)
     {
@@ -763,6 +764,7 @@ var zip_init_deflate = function() {
     {
 	zip_match_length = zip_MIN_MATCH - 1;
 	zip_match_available = 0;
+        zip_match_available = 0;
     }
 
     zip_complete = false;
