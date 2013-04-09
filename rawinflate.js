@@ -1,5 +1,5 @@
 /*
- * $Id: rawinflate.js,v 0.2 2009/03/01 18:32:24 dankogai Exp $
+ * $Id: rawinflate.js,v 0.3 2013/04/09 14:25:38 dankogai Exp dankogai $
  *
  * GNU General Public License, version 2 (GPL-2.0)
  *   http://opensource.org/licenses/GPL-2.0
