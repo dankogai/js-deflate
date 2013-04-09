@@ -1,6 +1,6 @@
 Raw (De|In)flate in Javascript
 ==============================
 
-See [demo] for usage.
+See [test/demo.html] for usage.
 
-[demo]: test/demo.html
+[test/demo.html]: test/demo.html
