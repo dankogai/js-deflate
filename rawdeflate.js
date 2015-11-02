@@ -1,5 +1,5 @@
 /*
- * $Id: rawdeflate.js,v 0.5 2013/04/09 14:25:38 dankogai Exp dankogai $
+ * $Id: rawdeflate.js,v 0.5 2013/04/09 14:25:38 dankogai Exp $
  *
  * GNU General Public License, version 2 (GPL-2.0)
  *   http://opensource.org/licenses/GPL-2.0
